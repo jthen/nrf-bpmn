@@ -19,6 +19,9 @@
 --                                  Datatypes
 -- ***************************************************************************
 
+
+--
+--
 -- Define a informacao de IP do protocolo
 -- Por questoes de simplificacao o formato do IPv4 foi
 -- traduzido para os elementos abaixo
