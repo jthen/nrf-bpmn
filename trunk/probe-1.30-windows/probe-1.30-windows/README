@@ -1,0 +1,35 @@
+This is ProBE version 1.30, a product of Formal Systems Europe Ltd.
+
+The purpose of ProBE is to allow the exploration of the behaviour of
+CSP processes. 
+
+ProBE is a free product; Formal Systems (Europe) Ltd makes no charge
+for its use for any purpose. 
+
+An online manual for ProBE is available at
+  <http:://www.fsel.com/documentation/probe/html/index.html>.
+
+Downloadable versions in a variety of formats are listed at
+  <http://www.fsel.com/probe_manual.html>.
+
+Use of ProBE is subject to licence, as outlined in the file 'Licence'
+which accompanies the ProBE binary and this readme. If you do not
+accept the licence, then you do not have our permission to use ProBE.
+
+Redistribution of ProBE is permitted according to the licence. If
+you'd like to make a copy available for download, then the main
+restriction is that you may not alter the contents of the ProBE
+distribution. Again, see the Licence file for details. If you'd like
+to make copies of ProBE available on your own web or ftp servers, then
+please feel free to do so.
+
+We hope you enjoy using ProBE!
+
+Support contracts for ProBE are available from Formal Systems (Europe)
+Ltd if required. Please email <probe-support@fsel.com> for pricing
+details. Regardless of whether you have a support contract, we'd still
+appreciate bug reports to the same address.
+
+You may wish to subscribe to the probe-announce mailing list, which
+contains only ProBE related announcements. Subscribe by sending mail
+to <probe-announce-request@lists.fsel.com>.

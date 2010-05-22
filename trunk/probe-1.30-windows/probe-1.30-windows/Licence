@@ -1,0 +1,48 @@
+The program ProBE and its associated documentation is Copyright 1997
+to 2003 Formal Systems (Europe) Ltd. 
+
+Hereafter Formal Systems (Europe) Ltd is identified as 'the author'
+and the binary program 'ProBE' and its associated documentation is
+identified as 'the software'.
+
+Use of the software for any purpose is subject to the following
+licence and disclaimer of liabilities. In the event that you do not
+accept the terms of either this licence or disclaimer of liabilities
+then no permission exists from the author for you to use ProBE for any
+purpose.
+
+The author grants the reader of this licence a non-exclusive right to
+execute the software in unmodified form for any purpose subject to the
+following conditions and disclaimers of liability:
+
+  THE SOFTWARE IS PROVIDED BY THE FORMAL SYSTEMS (EUROPE) LTD. "AS IS"
+  AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+  TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+  PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE
+  LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR
+  BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+  LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+  SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+  The name of the author may not be used to endorse results obtained
+  from the use of the software without specific prior written
+  permission.
+
+  Redistribution of the software to third parties and associated
+  documentation in unmodified form is permitted provided that the
+  following conditions are met:
+
+   1. The software must be redistributed as it was originally obtained
+      from the author. No changes to the software are permitted. No
+      files may be removed or added to the software.
+
+      Mere aggregation of the software with other data is expressly
+      permitted.
+
+   2. This licence must accompany any redistribution of the software.
+
+   3. The software must be identified as being the product of Formal
+      Systems (Europe) Ltd.
