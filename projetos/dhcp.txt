@@ -1,0 +1,159 @@
+-- Universidade Federal de Pernambuco / UFPE
+-- Centro de Informatica
+-- Programa de Pos-graduacao em Ciencia da Computacao
+-- 2010.1
+-- Disciplina Especificacao de Sistemas Distribuidos
+
+-- 1o. Projeto
+
+-- Especificacao de um sub-conjunto do protocolo DHCP
+-- Baseado na RFC da IETF
+-- RFC 2131
+
+-- Carlos Frederico Medeiros de Souza / cfms@cin.ufpe.br
+-- Diego Machado Dias / dmd@cin.ufpe.br
+
+-- Especificacao dos dados utilizados no projeto
+
+-- ***************************************************************************
+--                                  Datatypes
+-- ***************************************************************************
+
+-- Define a informacao de IP do protocolo
+-- Por questoes de simplificacao o formato do IPv4 foi
+-- traduzido para os elementos abaixo
+-- NIP = {0..4}
+-- datatype IpAddress = IP.NIP | UNDEFINED
+-- IpNumbers = { ip | ip <- IpAddress, not ip == UNDEFINED }
+-- IpStatics = { IP.0 , IP.1 }
+datatype IpAddress = IP0 | IP1 | IP2 | IP3 | IP4 | UNDEFINED
+
+-- Define a informacao de MAC Address das placas de rede dos dispositivos
+-- NMAC = {0..9}
+-- datatype MacNumbers = MAC.NMAC
+-- MacAddress = { MAC.number | number <- NMAC }
+datatype MacAddress = MAC0 | MAC1 | MAC2 | MAC3 | MAC4
+
+-- Obs: foi colocado mais dispositivos que IPs para demonstrar os casos de falta
+-- de IP para fornecer aos clientes
+
+datatype Messages = SUCCESS |
+                    ERROR_IP_EXISTS |
+                    POWEROFF | -- O cliente (host) esta desligado
+                    CONNECTED | -- O cliente (host) esta ligado (conectado na rede)
+                    UP |
+                    DOWN
+
+
+-- ***************************************************************************
+--                          DEFINICOES DOS EVENTOS
+-- ***************************************************************************
+
+-- Solicita um IP ao servidor DHCP
+channel requireIP : MacAddress
+
+channel receiveResponse : Messages
+channel boot , continue , shutdown : MacAddress
+channel assign: MacAddress.IpAddress
+channel expired,insertMappingStatic: MacAddress.IpAddress
+
+-- Reinicia o servidor DHCP com as configuracoes iniciais de fabrica
+-- Mapeamento Dinamico vazio
+-- Mapeamento Estatico vazio
+-- Lista de IPs estaticos vazio
+channel resetServerDHCP
+
+-- Desliga o servidor DHCP sem perder as configuracoes
+-- Obs.: somente o administrador (ADMINISTRATOR) pode
+-- ligar novamente o servidor DHCP
+channel shutdownServerDHCP
+
+-- Conjunto de IPs estaticos possiveis na rede
+-- Eh o powerSet of IpNumbers
+-- São todos os subconjuntos de IpNumbers
+channel insertStaticsIP : Set(IpAddress)
+channel deleteStaticsIP : Set(IpAddress)
+
+
+-- ***************************************************************************
+--                         PROCESSO  ADMINISTRATOR
+-- ***************************************************************************
+-- Esse processo funciona como um administrador de serviços da rede TCPIP
+-- Eh a pessoa que realiza as configuracoes e manutencao no servidor DHCP
+
+ADMINISTRATOR =
+              -- reinicia o servidor DHCP
+              resetServerDHCP -> ADMINISTRATOR
+              []
+              -- desliga o servidor DHCP
+              shutdownServerDHCP -> ADMINISTRATOR
+              []
+              -- Insere o conjunto de IPs que serao estaticos (pode ser vazio)
+              insertStaticsIP?ipStaticRange -> ADMINISTRATOR
+              []
+              -- Retira IPs da lista de IPs estaticos
+              deleteStaticsIP?ipStaticRange -> ADMINISTRATOR
+              -- []
+              -- iniciar o server dhcp
+
+-- FIM DO PROCESSO ADMINISTRATOR
+-- ***************************************************************************
+
+
+DHCPSERVER( mapDynamic, mapStatic , freeIpDynamic , freeIpStatic, UP ) =
+            not null(freeIpDynamic) & requireIP?mac -> assign.mac!head(freeIpDynamic) ->
+                          DHCPSERVER( union(mapDynamic,{ (mac,head(freeIpDynamic))}),
+                          mapStatic, tail(freeIpDynamic) , freeIpStatic , UP)
+                          []
+            not empty(mapDynamic) & expired?mac:{mac | (mac,ip) <- mapDynamic}?
+                                  ip:{ip | (mac,ip) <- mapDynamic} ->
+                                  DHCPSERVER(
+                                  diff(mapDynamic,{(mac,ip)}),
+                                  mapStatic,
+                                  freeIpDynamic^<ip>,
+                                  freeIpStatic,
+                                  UP)
+
+
+DHCPDAEMON = DHCPSERVER({},{},< IP2 , IP3, IP4 >,
+                                      <IP0, IP1>, UP)
+
+
+
+-- ***************************************************************************
+--                         PROCESSO  CLIENT
+-- ***************************************************************************
+
+CLIENT(mac, UNDEFINED, POWEROFF) =
+            boot!mac -> CLIENT(mac, UNDEFINED, CONNECTED)
+
+CLIENT(mac, UNDEFINED, CONNECTED) =
+            requireIP!mac -> assign.mac?ip -> CLIENT(mac,ip,CONNECTED)
+            []
+            continue!mac -> CLIENT(mac,UNDEFINED, CONNECTED)
+            []
+            shutdown!mac -> CLIENT(mac, UNDEFINED, POWEROFF)
+
+CLIENT(mac, ip, CONNECTED) =
+            expired!mac!ip -> CLIENT(mac, UNDEFINED, CONNECTED)
+            []
+            continue!mac -> CLIENT(mac,ip, CONNECTED)
+            []
+            shutdown!mac -> CLIENT(mac, UNDEFINED, POWEROFF)
+
+
+-- FIM DO PROCESSO CLIENT
+-- ***************************************************************************
+
+
+CLIENTT=CLIENT(MAC0,UNDEFINED, CONNECTED)
+
+
+SYSTEM = DHCPDAEMON [|{|requireIP , assign, expired|}|] CLIENTT
+
+
+
+-- SISTEMA = DHCPSERVER({}, {}) [|{|reqip,...|}|] CLIENTES
+-- CLIENTES = ||| mac : macs @ CLIENT(mac,ip,status)
+SISTEMA = STOP
+assert SISTEMA  :[deadlock free[FD]]
